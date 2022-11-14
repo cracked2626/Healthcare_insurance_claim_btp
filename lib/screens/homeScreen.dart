@@ -1,7 +1,6 @@
 import 'package:btp_project/screens/patientRecordScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import 'insurance_admin.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -107,14 +106,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 buildElevatedButton(
                   title: "Login",
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) {
-                          return const InsuranceAdmin();
-                        },
-                      ),
-                    );
+                    FirebaseFirestore.instance.collection('users').add({
+                      'name': entityController.text,
+                      'password': passwordController.text,
+                      'entity': initalValue,
+                    });
                   },
                 ),
               ],
