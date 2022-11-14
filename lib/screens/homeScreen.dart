@@ -1,6 +1,14 @@
+import 'dart:developer';
+
 import 'package:btp_project/screens/patientRecordScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/metaMask_provider.dart';
+import 'hAdmin.dart';
+import 'insurance_admin.dart';
+import 'labAdmin.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -60,7 +68,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(value),
                     );
                   }).toList(),
-                  onChanged: (_) {},
+                  onChanged: (value) {
+                    setState(() {
+                      initalValue = value!;
+                    });
+                  },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -106,11 +118,42 @@ class _MyHomePageState extends State<MyHomePage> {
                 buildElevatedButton(
                   title: "Login",
                   onPressed: () {
-                    FirebaseFirestore.instance.collection('users').add({
-                      'name': entityController.text,
-                      'password': passwordController.text,
-                      'entity': initalValue,
-                    });
+                    sendToScreen(context, const Patient());
+                    // findPageName();
+                  },
+                ),
+                MaterialButton(
+                  child: Consumer<MetamaskProvider>(
+                    builder: (context, meta, child) {
+                      String text = '';
+                      if (meta.isConnected && meta.isInOperatingChain) {
+                        text = 'Metamask connected';
+                      } else if (meta.isConnected && !meta.isInOperatingChain) {
+                        text = 'Wrong operating chain';
+                      } else if (meta.isEnabled) {
+                        return const Text(
+                          'Connect Metamask',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      } else {
+                        text = 'Unsupported Browser';
+                      }
+
+                      return Text(
+                        text,
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                  ),
+                  onPressed: () {
+                    final meta = context.read<MetamaskProvider>();
+                    meta.connect();
                   },
                 ),
               ],
@@ -120,6 +163,52 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  sendToScreen(context, pageClassName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) {
+          return pageClassName;
+        },
+      ),
+    );
+  }
+
+  showSnackBar(context, msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+      ),
+    );
+  }
+
+  findPageName() {
+    sendToScreen(context, const Patient());
+    log(initalValue);
+    if (initalValue == "Entity Type") {
+      showSnackBar(context, 'Please select entity type');
+    } else if (passwordController.text.trim() == "") {
+      showSnackBar(context, 'Please enter password');
+    }
+    FirebaseFirestore.instance.collection('users').add({
+      'name': entityController.text,
+      'password': passwordController.text,
+      'entity': initalValue,
+    });
+    if (initalValue == "Patient" && passwordController.text == "patient") {
+      sendToScreen(context, const Patient());
+    } else if (initalValue == "Hospital admin" &&
+        passwordController.text == "hadmin") {
+      sendToScreen(context, const HospitalAdmin());
+    } else if (initalValue == "Lab admin" &&
+        passwordController.text == "labadmin") {
+      sendToScreen(context, const LabAdmin());
+    } else if (initalValue == "Insurance company" &&
+        passwordController.text == "insurance") {
+      sendToScreen(context, const InsuranceAdmin());
+    }
   }
 }
 
@@ -142,6 +231,14 @@ ElevatedButton buildElevatedButton(
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
+    ),
+  );
+}
+
+showSnackBar(context, msg) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(msg),
     ),
   );
 }

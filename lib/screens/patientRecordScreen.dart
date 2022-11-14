@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web3/flutter_web3.dart';
 
 import 'homeScreen.dart';
 
@@ -139,10 +140,56 @@ class _PatientState extends State<Patient> {
         const SizedBox(
           height: 20,
         ),
-        buildElevatedButton(title: "Claim Insurance", onPressed: () {}),
+        buildElevatedButton(
+            title: "Claim Insurance",
+            onPressed: () async {
+              // Call `eth_gasPrice` as `BigInt`
+              final result = await ethereum!.request<BigInt>('eth_gasPrice');
+              print(result); // 20000000000
+              result; // 5000000000
+              result is BigInt; // true
+              print('eth conn ${ethereum!.isConnected}');
+              final web3provider = Web3Provider.fromEthereum(ethereum!);
+              print('web3provider: $web3provider');
+              final rpcProvider =
+                  JsonRpcProvider("https://bsc-dataseed.binance.org/");
+              print('rpcProvider: $rpcProvider');
+              // Send 1000000000 wei to `0xcorge`
+              final tx = await provider!.getSigner().sendTransaction(
+                    TransactionRequest(
+                      to: '0xcorge',
+                      value: BigInt.from(1000000000),
+                    ),
+                  );
+              print('tx: $tx');
+              // tx.hash; // 0xplugh
+              //
+              // final receipt = await tx.wait();
+              //
+              // receipt is TransactionReceipt; // true
+              // print('receipt: $receipt');
+              // final web3provider = Web3Provider.fromEthereum(ethereum!);
+              // final contract = Contract(
+              //   '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+              //   'Insurance.json',
+              //   web3provider,
+              // );
+              // contract.call(
+              //   'createClaim',
+              //   [
+              //     idController.text,
+              //     nameController.text,
+              //     dobController.text,
+              //     hospitalNameController.text,
+              //     priceController.text,
+              //   ],
+              // );
+            }),
       ],
     );
   }
+
+  claimInsurance() {}
 }
 
 TextField buildTextField(
