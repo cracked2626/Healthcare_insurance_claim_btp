@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "650375015497",
+    "project_id": "health-insurance-blockchain",
+    "storage_bucket": "health-insurance-blockchain.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650375015497:android:0b57cab54c1e29cacca398",
+        "android_client_info": {
+          "package_name": "com.example.btp_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "650375015497-rvf8ihsrpmri99ktrv4uibhe3bofvj90.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBky7SNA65ovEo2xfl8tkbs7stYKPe7dfc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650375015497-rvf8ihsrpmri99ktrv4uibhe3bofvj90.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
