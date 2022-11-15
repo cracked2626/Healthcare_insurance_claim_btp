@@ -115,51 +115,53 @@ class _PatientState extends State<Patient> {
     );
   }
 
-  Column buildClaimInsuranceDetail() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Text(
-          'Create New Claim',
-          style: TextStyle(
-            fontSize: 32.0,
-            fontWeight: FontWeight.bold,
+  SingleChildScrollView buildClaimInsuranceDetail() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text(
+            'Create New Claim',
+            style: TextStyle(
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        buildTextField(controller: idController, hint: 'Patient ID'),
-        const SizedBox(
-          height: 20,
-        ),
-        buildTextField(controller: nameController, hint: 'Name'),
-        const SizedBox(
-          height: 20,
-        ),
-        buildTextField(controller: dobController, hint: 'Date Of Birth'),
-        const SizedBox(
-          height: 20,
-        ),
-        buildTextField(
-            controller: hospitalNameController, hint: 'Hospital Name'),
-        const SizedBox(
-          height: 20,
-        ),
-        buildTextField(
-            controller: priceController, hint: 'Insurance claim price ₹'),
-        const SizedBox(
-          height: 20,
-        ),
-        buildElevatedButton(
-          title: "Claim Insurance",
-          showLoader: showLoading,
-          onPressed: () async {
-            await claimInsurance();
-            await doEthConnectAndCreateContract();
-          },
-        ),
-      ],
+          const SizedBox(
+            height: 20,
+          ),
+          buildTextField(controller: idController, hint: 'Patient ID'),
+          const SizedBox(
+            height: 20,
+          ),
+          buildTextField(controller: nameController, hint: 'Name'),
+          const SizedBox(
+            height: 20,
+          ),
+          buildTextField(controller: dobController, hint: 'Date Of Birth'),
+          const SizedBox(
+            height: 20,
+          ),
+          buildTextField(
+              controller: hospitalNameController, hint: 'Hospital Name'),
+          const SizedBox(
+            height: 20,
+          ),
+          buildTextField(
+              controller: priceController, hint: 'Insurance claim price ₹'),
+          const SizedBox(
+            height: 20,
+          ),
+          buildElevatedButton(
+            title: "Claim Insurance",
+            showLoader: showLoading,
+            onPressed: () async {
+              await claimInsurance();
+              await doEthConnectAndCreateContract();
+            },
+          ),
+        ],
+      ),
     );
   }
 
