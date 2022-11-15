@@ -1,6 +1,8 @@
 import 'package:btp_project/screens/patientRecordScreen.dart';
 import 'package:flutter/material.dart';
 
+import 'homeScreen.dart';
+
 class InsuranceAdmin extends StatefulWidget {
   const InsuranceAdmin({Key? key}) : super(key: key);
 
@@ -15,6 +17,9 @@ class _InsuranceAdminState extends State<InsuranceAdmin> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Insurance Claims'),
+          actions: [
+            buildMetaMaskStatus(context),
+          ],
         ),
         body: Container(
           decoration: const BoxDecoration(
@@ -56,16 +61,17 @@ class _InsuranceAdminState extends State<InsuranceAdmin> {
           children: [
             TableRow(
               children: [
-                buildText('Patient ID'),
-                buildText('Name'),
-                buildText('Date of claim'),
-                buildText('Hospital Name'),
-                buildText('Amount'),
-                buildText('Sign Count'),
+                buildText('Patient ID', isHeading: true),
+                buildText('Name', isHeading: true),
+                buildText('Date of claim', isHeading: true),
+                buildText('Hospital Name', isHeading: true),
+                buildText('Amount', isHeading: true),
+                buildText('Sign Count', isHeading: true),
               ],
             ),
           ],
         ),
+        buildStreamBuilder(),
       ],
     );
   }

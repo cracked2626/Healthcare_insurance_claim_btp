@@ -1,4 +1,5 @@
 import 'package:btp_project/screens/patientRecordScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'homeScreen.dart';
@@ -12,12 +13,16 @@ class HospitalAdmin extends StatefulWidget {
 
 class _HospitalAdminState extends State<HospitalAdmin> {
   TextEditingController idController = TextEditingController();
+  bool showLoading = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Hospital Admin'),
+          actions: [
+            buildMetaMaskStatus(context),
+          ],
         ),
         body: Container(
           decoration: const BoxDecoration(
@@ -62,16 +67,17 @@ class _HospitalAdminState extends State<HospitalAdmin> {
           children: [
             TableRow(
               children: [
-                buildText('Patient ID'),
+                buildText('Patient ID', isHeading: true),
                 buildText('Name'),
-                buildText('Date of claim'),
-                buildText('Hospital Name'),
-                buildText('Amount'),
-                buildText('Sign Count'),
+                buildText('Date of claim', isHeading: true),
+                buildText('Hospital Name', isHeading: true),
+                buildText('Amount', isHeading: true),
+                buildText('Sign Count', isHeading: true),
               ],
             ),
           ],
         ),
+        buildStreamBuilder(),
       ],
     );
   }
@@ -98,9 +104,48 @@ class _HospitalAdminState extends State<HospitalAdmin> {
         ),
         buildElevatedButton(
           title: "Approve Insurance",
-          onPressed: () {},
+          showLoader: showLoading,
+          onPressed: () {
+            approveInsurance();
+          },
         ),
       ],
     );
+  }
+
+  approveInsurance() async {
+    // check if isApprovedByHospital is true from firestore
+    if (idController.text.trim() == "") {
+      showSnackBar(context, "Please enter patient ID");
+      return;
+    }
+    setState(() {
+      showLoading = true;
+    });
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('InsuranceClaims')
+        .doc(idController.text.trim())
+        .get();
+    if (documentSnapshot.exists) {
+      if (documentSnapshot['isApprovedByHospital'] == true) {
+        // show snackbar
+        showSnackBar(context, 'Insurance is already Approved');
+      } else {
+        // show snackbar
+        FirebaseFirestore.instance
+            .collection('InsuranceClaims')
+            .doc(idController.text.trim())
+            .update({
+          'signCount': FieldValue.increment(1),
+          'isApprovedByHospital': true,
+        });
+        showSnackBar(context, 'Insurance Approved Successfully');
+      }
+    }
+    setState(() {
+      showLoading = false;
+    });
+    idController.clear();
+    //  find the record with the id and update the status to approved
   }
 }

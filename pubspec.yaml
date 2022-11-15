@@ -57,7 +57,21 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - assets/images/
+  fonts:
+    - family: Satoshi
+      fonts:
+        - asset: fonts/Satoshi-Black.otf
+        - asset: fonts/Satoshi-BlackItalic.otf
+        - asset: fonts/Satoshi-Bold.otf
+        - asset: fonts/Satoshi-BoldItalic.otf
+        - asset: fonts/Satoshi-Italic.otf
+        - asset: fonts/Satoshi-Light.otf
+        - asset: fonts/Satoshi-LightItalic.otf
+        - asset: fonts/Satoshi-Medium.otf
+        - asset: fonts/Satoshi-MediumItalic.otf
+        - asset: fonts/Satoshi-Regular.otf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -79,6 +93,7 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+
   # fonts:
   #   - family: Schyler
   #     fonts:

@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
+          fontFamily: 'Satoshi',
           primarySwatch: const MaterialColor(
             4294967295,
             <int, Color>{
