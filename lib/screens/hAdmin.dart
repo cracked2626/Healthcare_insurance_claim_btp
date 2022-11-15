@@ -126,6 +126,7 @@ class _HospitalAdminState extends State<HospitalAdmin> {
         .collection('InsuranceClaims')
         .doc(idController.text.trim())
         .get();
+    if (!mounted) return;
     if (documentSnapshot.exists) {
       if (documentSnapshot['isApprovedByHospital'] == true) {
         // show snackbar

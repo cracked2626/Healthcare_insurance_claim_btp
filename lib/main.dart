@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Health Insurance',
         theme: ThemeData(
           fontFamily: 'Satoshi',
           primarySwatch: const MaterialColor(

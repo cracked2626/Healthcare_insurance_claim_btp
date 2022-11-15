@@ -156,8 +156,8 @@ class _PatientState extends State<Patient> {
             title: "Claim Insurance",
             showLoader: showLoading,
             onPressed: () async {
-              await claimInsurance();
               await doEthConnectAndCreateContract();
+              await claimInsurance();
             },
           ),
         ],
@@ -246,6 +246,7 @@ class _PatientState extends State<Patient> {
   claimInsurance() async {
     //  save user data to firebase
     log('claimInsurance called');
+    await Future.delayed(const Duration(seconds: 30));
     await FirebaseFirestore.instance
         .collection('InsuranceClaims')
         .doc(idController.text.trim())

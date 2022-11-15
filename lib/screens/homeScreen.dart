@@ -195,6 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       showSpinner = false;
     });
+    if (!mounted) return;
     if (initalValue == "Patient" && passwordController.text == "patient") {
       sendToScreen(context, const Patient());
     } else if (initalValue == "Hospital admin" &&
@@ -217,7 +218,7 @@ ElevatedButton buildElevatedButton(
   return ElevatedButton(
     onPressed: onPressed,
     style: ElevatedButton.styleFrom(
-      primary: const Color(0xff08443C),
+      backgroundColor: const Color(0xff08443C),
       padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
       textStyle: const TextStyle(
         fontSize: 20,
@@ -270,6 +271,7 @@ Padding buildMetaMaskStatus(BuildContext context) {
                 'Connect Metamask',
                 style: TextStyle(
                   fontSize: 14.0,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
