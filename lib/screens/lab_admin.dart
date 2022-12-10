@@ -1,17 +1,17 @@
-import 'package:btp_project/screens/patientRecordScreen.dart';
+import 'package:btp_project/screens/patient_records_screen.dart';
+import 'package:btp_project/widgets/common_widgets.dart';
+import 'package:btp_project/widgets/text_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'homeScreen.dart';
-
-class HospitalAdmin extends StatefulWidget {
-  const HospitalAdmin({Key? key}) : super(key: key);
+class LabAdmin extends StatefulWidget {
+  const LabAdmin({Key? key}) : super(key: key);
 
   @override
-  State<HospitalAdmin> createState() => _HospitalAdminState();
+  State<LabAdmin> createState() => _LabAdminState();
 }
 
-class _HospitalAdminState extends State<HospitalAdmin> {
+class _LabAdminState extends State<LabAdmin> {
   TextEditingController idController = TextEditingController();
   bool showLoading = false;
   @override
@@ -19,7 +19,7 @@ class _HospitalAdminState extends State<HospitalAdmin> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Hospital Admin'),
+          title: const Text('Lab Admin'),
           actions: [
             buildMetaMaskStatus(context),
           ],
@@ -33,8 +33,11 @@ class _HospitalAdminState extends State<HospitalAdmin> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible(
-                child: buildAproveRecord(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: Flexible(
+                  child: buildAproveRecord(),
+                ),
               ),
               const SizedBox(
                 width: 20,
@@ -68,7 +71,7 @@ class _HospitalAdminState extends State<HospitalAdmin> {
             TableRow(
               children: [
                 buildText('Patient ID', isHeading: true),
-                buildText('Name'),
+                buildText('Name', isHeading: true),
                 buildText('Date of claim', isHeading: true),
                 buildText('Hospital Name', isHeading: true),
                 buildText('Amount', isHeading: true),
@@ -105,8 +108,8 @@ class _HospitalAdminState extends State<HospitalAdmin> {
         buildElevatedButton(
           title: "Approve Insurance",
           showLoader: showLoading,
-          onPressed: () {
-            approveInsurance();
+          onPressed: () async {
+            await approveInsurance();
           },
         ),
       ],
@@ -126,11 +129,12 @@ class _HospitalAdminState extends State<HospitalAdmin> {
         .collection('InsuranceClaims')
         .doc(idController.text.trim())
         .get();
-    if (!mounted) return;
+
     if (documentSnapshot.exists) {
-      if (documentSnapshot['isApprovedByHospital'] == true) {
+      if (documentSnapshot['isApprovedByLab'] == true) {
         // show snackbar
-        showSnackBar(context, 'Insurance is already Approved');
+        if (!mounted) return;
+        showSnackBar(context, 'Insurance Claim is already Approved');
       } else {
         // show snackbar
         FirebaseFirestore.instance
@@ -138,9 +142,10 @@ class _HospitalAdminState extends State<HospitalAdmin> {
             .doc(idController.text.trim())
             .update({
           'signCount': FieldValue.increment(1),
-          'isApprovedByHospital': true,
+          'isApprovedByLab': true,
         });
-        showSnackBar(context, 'Insurance Approved Successfully');
+        if (!mounted) return;
+        showSnackBar(context, 'Insurance Claim Approved Successfully');
       }
     }
     setState(() {

@@ -1,17 +1,17 @@
-import 'package:btp_project/screens/patientRecordScreen.dart';
+import 'package:btp_project/screens/patient_records_screen.dart';
+import 'package:btp_project/widgets/common_widgets.dart';
+import 'package:btp_project/widgets/text_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'homeScreen.dart';
-
-class LabAdmin extends StatefulWidget {
-  const LabAdmin({Key? key}) : super(key: key);
+class HospitalAdmin extends StatefulWidget {
+  const HospitalAdmin({Key? key}) : super(key: key);
 
   @override
-  State<LabAdmin> createState() => _LabAdminState();
+  State<HospitalAdmin> createState() => _HospitalAdminState();
 }
 
-class _LabAdminState extends State<LabAdmin> {
+class _HospitalAdminState extends State<HospitalAdmin> {
   TextEditingController idController = TextEditingController();
   bool showLoading = false;
   @override
@@ -19,7 +19,7 @@ class _LabAdminState extends State<LabAdmin> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Lab Admin'),
+          title: const Text('Hospital Admin'),
           actions: [
             buildMetaMaskStatus(context),
           ],
@@ -33,8 +33,11 @@ class _LabAdminState extends State<LabAdmin> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible(
-                child: buildAproveRecord(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: Flexible(
+                  child: buildAproveRecord(),
+                ),
               ),
               const SizedBox(
                 width: 20,
@@ -68,7 +71,7 @@ class _LabAdminState extends State<LabAdmin> {
             TableRow(
               children: [
                 buildText('Patient ID', isHeading: true),
-                buildText('Name', isHeading: true),
+                buildText('Name'),
                 buildText('Date of claim', isHeading: true),
                 buildText('Hospital Name', isHeading: true),
                 buildText('Amount', isHeading: true),
@@ -105,8 +108,8 @@ class _LabAdminState extends State<LabAdmin> {
         buildElevatedButton(
           title: "Approve Insurance",
           showLoader: showLoading,
-          onPressed: () async {
-            await approveInsurance();
+          onPressed: () {
+            approveInsurance();
           },
         ),
       ],
@@ -126,12 +129,11 @@ class _LabAdminState extends State<LabAdmin> {
         .collection('InsuranceClaims')
         .doc(idController.text.trim())
         .get();
-
+    if (!mounted) return;
     if (documentSnapshot.exists) {
-      if (documentSnapshot['isApprovedByLab'] == true) {
+      if (documentSnapshot['isApprovedByHospital'] == true) {
         // show snackbar
-        if (!mounted) return;
-        showSnackBar(context, 'Insurance Claim is already Approved');
+        showSnackBar(context, 'Insurance is already Approved');
       } else {
         // show snackbar
         FirebaseFirestore.instance
@@ -139,10 +141,9 @@ class _LabAdminState extends State<LabAdmin> {
             .doc(idController.text.trim())
             .update({
           'signCount': FieldValue.increment(1),
-          'isApprovedByLab': true,
+          'isApprovedByHospital': true,
         });
-        if (!mounted) return;
-        showSnackBar(context, 'Insurance Claim Approved Successfully');
+        showSnackBar(context, 'Insurance Approved Successfully');
       }
     }
     setState(() {

@@ -1,23 +1,23 @@
 import 'dart:developer';
 
-import 'package:btp_project/screens/patientRecordScreen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:btp_project/constants/routes.dart';
+import 'package:btp_project/screens/patient_records_screen.dart';
+import 'package:btp_project/widgets/common_widgets.dart';
+import 'package:btp_project/widgets/text_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/metaMask_provider.dart';
-import 'hAdmin.dart';
-import 'insurance_admin.dart';
-import 'labAdmin.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Login> createState() => _LoginState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginState extends State<Login> {
   TextEditingController entityController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool showSpinner = false;
@@ -154,14 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   sendToScreen(context, pageClassName) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) {
-          return pageClassName;
-        },
-      ),
-    );
+    Navigator.pushNamed(context, pageClassName);
   }
 
   showSnackBar(context, msg) {
@@ -197,114 +190,16 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     if (!mounted) return;
     if (initalValue == "Patient" && passwordController.text == "patient") {
-      sendToScreen(context, const Patient());
+      sendToScreen(context, RoutesName.patient);
     } else if (initalValue == "Hospital admin" &&
         passwordController.text == "hadmin") {
-      sendToScreen(context, const HospitalAdmin());
+      sendToScreen(context, RoutesName.labAdmin);
     } else if (initalValue == "Lab admin" &&
         passwordController.text == "labadmin") {
-      sendToScreen(context, const LabAdmin());
+      sendToScreen(context, RoutesName.labAdmin);
     } else if (initalValue == "Insurance company" &&
         passwordController.text == "insurance") {
-      sendToScreen(context, const InsuranceAdmin());
+      sendToScreen(context, RoutesName.insuranceAdmin);
     }
   }
-}
-
-ElevatedButton buildElevatedButton(
-    {required String title,
-    required VoidCallback onPressed,
-    bool showLoader = false}) {
-  return ElevatedButton(
-    onPressed: onPressed,
-    style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xff08443C),
-      padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
-      textStyle: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    child: showLoader
-        ? const CircularProgressIndicator()
-        : Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-  );
-}
-
-showSnackBar(context, msg) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(msg),
-    ),
-  );
-}
-
-Padding buildMetaMaskStatus(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: MaterialButton(
-      color: Colors.black,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(30.0),
-        ),
-      ),
-      padding: const EdgeInsets.all(10.0),
-      child: Consumer<MetamaskProvider>(
-        builder: (context, meta, child) {
-          String text = '';
-          if (meta.isConnected && meta.isInOperatingChain) {
-            text = 'Metamask connected';
-          } else if (meta.isConnected && !meta.isInOperatingChain) {
-            text = 'Wrong operating chain';
-          } else if (meta.isEnabled) {
-            return const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Connect Metamask',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            );
-          } else {
-            text = 'Unsupported Browser For Metamask';
-          }
-
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Image.asset(
-                  'assets/images/metamask.png',
-                  height: 60,
-                ),
-                Text(
-                  text,
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-      onPressed: () {
-        final meta = context.read<MetamaskProvider>();
-        meta.connect();
-      },
-    ),
-  );
 }

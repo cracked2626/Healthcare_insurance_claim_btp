@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 contract HealthCare {
-    address public hospitalAdmin;
     address public labAdmin;
+    address public hospitalAdmin;
 
     struct Record {
         uint256 ID;
