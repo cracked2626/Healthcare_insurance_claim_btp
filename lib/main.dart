@@ -1,5 +1,7 @@
+import 'package:btp_project/constants/routes.dart';
 import 'package:btp_project/providers/metaMask_provider.dart';
-import 'package:btp_project/screens/homeScreen.dart';
+import 'package:btp_project/screens/home_screen.dart';
+import 'package:btp_project/services/route_generator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +48,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        home: const MyHomePage(),
+        builder: (context, child) => LayoutRederer(child: child),
+      onGenerateRoute: RouteGenerator.generateRoute,
+      initialRoute: RoutesName.login,
       ),
     );
   }

@@ -1,8 +1,7 @@
-import 'package:btp_project/screens/patientRecordScreen.dart';
+import 'package:btp_project/screens/patient_records_screen.dart';
+import 'package:btp_project/widgets/common_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import 'homeScreen.dart';
 
 class LabAdmin extends StatefulWidget {
   const LabAdmin({Key? key}) : super(key: key);

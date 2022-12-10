@@ -1,7 +1,7 @@
-import 'package:btp_project/screens/patientRecordScreen.dart';
+import 'package:btp_project/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:btp_project/screens/patient_records_screen.dart';
 
-import 'homeScreen.dart';
 
 class InsuranceAdmin extends StatefulWidget {
   const InsuranceAdmin({Key? key}) : super(key: key);

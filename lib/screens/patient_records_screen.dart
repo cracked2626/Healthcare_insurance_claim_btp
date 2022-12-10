@@ -1,11 +1,9 @@
 import 'dart:developer';
 
+import 'package:btp_project/widgets/common_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web3/flutter_web3.dart';
-
-import 'homeScreen.dart';
 
 class Patient extends StatefulWidget {
   const Patient({Key? key}) : super(key: key);
@@ -70,8 +68,11 @@ class _PatientState extends State<Patient> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible(
-                child: buildClaimInsuranceDetail(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: Flexible(
+                  child: buildClaimInsuranceDetail(),
+                ),
               ),
               const SizedBox(
                 width: 20,
@@ -213,19 +214,19 @@ class _PatientState extends State<Patient> {
             value: BigInt.from(0),
           ),
         );
-    print('tx: $tx');
-    tx.hash; // 0xplugh
+    // // print('tx: ${tx.chainId}');
+    // tx.hash; // 0xplugh
 
-    final receipt = await tx.wait();
+    // final receipt = await tx.wait();
 
-    receipt is TransactionReceipt; // true
-    print('receipt: $receipt');
-    final contract = Contract(
-      '0xA1B023b05996Dd3e85FA2edB3400594806193406',
-      abi,
-      web3provider,
-    );
-    print('contract: $contract');
+    // receipt is TransactionReceipt; // true
+    // print('receipt: $receipt');
+    // final contract = Contract(
+    //   '0xA1B023b05996Dd3e85FA2edB3400594806193406',
+    //   abi,
+    //   web3provider,
+    // );
+    // print('contract: $contract');
     // final anotherBusd = Contract(
     //   busdAddress,
     //   Interface(abi),
@@ -277,6 +278,7 @@ TextField buildTextField(
     {required TextEditingController controller, required String hint}) {
   return TextField(
     controller: controller,
+    keyboardType: TextInputType.datetime,
     style: const TextStyle(
       fontWeight: FontWeight.w900,
       fontSize: 16.0,
