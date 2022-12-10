@@ -7,5 +7,7 @@ class RoutesName {
 
   static const String insuranceAdmin = '/insurance_admin';
 
-  static const String login = '/';
+  static const String login = '/login';
+
+  static const String signUp = '/';
 }

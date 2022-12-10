@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:btp_project/widgets/common_widgets.dart';
+import 'package:btp_project/widgets/text_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web3/flutter_web3.dart';
+import 'package:intl/intl.dart';
 
 class Patient extends StatefulWidget {
   const Patient({Key? key}) : super(key: key);
@@ -139,7 +141,70 @@ class _PatientState extends State<Patient> {
           const SizedBox(
             height: 20,
           ),
-          buildTextField(controller: dobController, hint: 'Date Of Birth'),
+          TextField(
+            controller: dobController, //editing controller of this TextField
+            style: const TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 16.0,
+              color: Color(0xff08443C),
+            ),
+            decoration: const InputDecoration(
+              suffixIcon: Padding(
+                padding: EdgeInsets.only(right: 15.0),
+                child: Icon(Icons.calendar_today),
+              ), //icon of text field
+              labelText: "Choose Date", //label text of field
+              labelStyle: TextStyle(
+                fontSize: 16.0,
+                color: Colors.grey,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30.0),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30.0),
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30.0),
+                ),
+              ),
+            ),
+            readOnly:
+                true, //set it true, so that user will not able to edit text
+            onTap: () async {
+              DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(
+                      2000), //DateTime.now() - not to allow to choose before today.
+                  lastDate: DateTime(2101));
+
+              if (pickedDate != null) {
+                String formattedDate =
+                    DateFormat('yyyy-MM-dd').format(pickedDate);
+                setState(() {
+                  dobController.text =
+                      formattedDate; //set output date to TextField value.
+                });
+              } else {
+                log("Date is not selected");
+              }
+            },
+          ),
           const SizedBox(
             height: 20,
           ),
@@ -272,113 +337,4 @@ class _PatientState extends State<Patient> {
     hospitalNameController.clear();
     priceController.clear();
   }
-}
-
-TextField buildTextField(
-    {required TextEditingController controller, required String hint}) {
-  return TextField(
-    controller: controller,
-    keyboardType: TextInputType.datetime,
-    style: const TextStyle(
-      fontWeight: FontWeight.w900,
-      fontSize: 16.0,
-      color: Color(0xff08443C),
-    ),
-    cursorColor: Colors.black,
-    decoration: InputDecoration(
-      labelText: hint,
-      labelStyle: const TextStyle(
-        fontSize: 16.0,
-        color: Colors.grey,
-      ),
-
-      // isDense: true,
-      // contentPadding: EdgeInsets.only(top: 4),
-      focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.black,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(30.0),
-        ),
-      ),
-      enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.black,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(30.0),
-        ),
-      ),
-      border: const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.black,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(30.0),
-        ),
-      ),
-    ),
-  );
-}
-
-Center buildText(text, {bool isHeading = false}) {
-  return Center(
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 17.0,
-          fontWeight: isHeading ? FontWeight.w900 : FontWeight.normal,
-        ),
-      ),
-    ),
-  );
-}
-
-StreamBuilder<QuerySnapshot<Map<String, dynamic>>> buildStreamBuilder() {
-  return StreamBuilder(
-      stream:
-          FirebaseFirestore.instance.collection('InsuranceClaims').snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                Map<String, dynamic> ds = snapshot.data!.docs[index].data();
-                String name = ds['name'];
-                String id = ds['patientId'];
-                String hospitalName = ds['hospitalName'];
-                String price = ds['price'];
-                String date = ds['timeStamp'].toDate().toString();
-                // format timeStamp to date
-                String signCount =
-                    ds['signCount'] == null ? '0' : ds['signCount'].toString();
-
-                return Table(
-                  border: TableBorder.all(color: Colors.black),
-                  children: [
-                    TableRow(
-                      children: [
-                        buildText(id),
-                        buildText(name),
-                        buildText(date),
-                        buildText(hospitalName),
-                        buildText(price),
-                        buildText(signCount),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            ),
-          );
-        } else {
-          return const Text('Loading...');
-        }
-        return Text('data :${snapshot.data?.docs.first.data()['patientId']}');
-      });
 }

@@ -3,8 +3,9 @@ import 'dart:developer';
 import 'package:btp_project/constants/routes.dart';
 import 'package:btp_project/screens/patient_records_screen.dart';
 import 'package:btp_project/widgets/common_widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:btp_project/widgets/text_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/metaMask_provider.dart';

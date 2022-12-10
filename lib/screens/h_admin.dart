@@ -1,5 +1,6 @@
 import 'package:btp_project/screens/patient_records_screen.dart';
 import 'package:btp_project/widgets/common_widgets.dart';
+import 'package:btp_project/widgets/text_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -32,8 +33,11 @@ class _HospitalAdminState extends State<HospitalAdmin> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible(
-                child: buildAproveRecord(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: Flexible(
+                  child: buildAproveRecord(),
+                ),
               ),
               const SizedBox(
                 width: 20,

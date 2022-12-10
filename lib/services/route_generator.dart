@@ -5,6 +5,7 @@ import 'package:btp_project/screens/insurance_admin.dart';
 import 'package:btp_project/screens/lab_admin.dart';
 import 'package:btp_project/screens/login.dart';
 import 'package:btp_project/screens/patient_records_screen.dart';
+import 'package:btp_project/screens/signup.dart';
 import 'package:btp_project/services/route_generator_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -23,9 +24,12 @@ class RouteGenerator {
       case RoutesName.insuranceAdmin:
         return GeneratePageRoute(
             page: const InsuranceAdmin(), routeName: settings.name);      
+      case RoutesName.login:
+        return GeneratePageRoute(
+            page: const Login(), routeName: settings.name);      
       default:
         return GeneratePageRoute(
-            page: const Login(), routeName: settings.name);
+            page: const SignUp(), routeName: settings.name);
     }
   }
 }
