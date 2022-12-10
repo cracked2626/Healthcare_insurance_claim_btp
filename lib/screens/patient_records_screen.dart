@@ -72,9 +72,7 @@ class _PatientState extends State<Patient> {
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.25,
-                child: Flexible(
-                  child: buildClaimInsuranceDetail(),
-                ),
+                child: buildClaimInsuranceDetail(),
               ),
               const SizedBox(
                 width: 20,
@@ -119,6 +117,7 @@ class _PatientState extends State<Patient> {
   }
 
   SingleChildScrollView buildClaimInsuranceDetail() {
+    print("here oos");
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -148,17 +147,59 @@ class _PatientState extends State<Patient> {
               fontSize: 16.0,
               color: Color(0xff08443C),
             ),
-            decoration: const InputDecoration(
-              suffixIcon: Padding(
-                padding: EdgeInsets.only(right: 15.0),
-                child: Icon(Icons.calendar_today),
+            cursorColor: Colors.black,
+            decoration: InputDecoration(
+              suffixIcon: GestureDetector(
+                onTap: () async {
+                  print("here");
+                  DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(
+                          2000), //DateTime.now() - not to allow to choose before today.
+                      lastDate: DateTime(2101),
+                      builder: (context, child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: const ColorScheme.light(
+                              primary: Colors.lightBlue, // <-- SEE HERE
+                              onPrimary: Colors.black, // <-- SEE HERE
+                              onSurface: Colors.blueAccent, // <-- SEE HERE
+                            ),
+                            textButtonTheme: TextButtonThemeData(
+                              style: TextButton.styleFrom(
+                                foregroundColor:
+                                    Colors.red, // button text color
+                              ),
+                            ),
+                          ),
+                          child: child!,
+                        );
+                      });
+                  print("date picked $pickedDate");
+                  if (pickedDate != null) {
+                    String formattedDate =
+                        DateFormat('yyyy-MM-dd').format(pickedDate);
+                    setState(() {
+                      print("here i am");
+                      dobController.text =
+                          formattedDate; //set output date to TextField value.
+                    });
+                  } else {
+                    log("Date is not selected");
+                  }
+                },
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 15.0),
+                  child: Icon(Icons.calendar_today),
+                ),
               ), //icon of text field
-              labelText: "Choose Date", //label text of field
-              labelStyle: TextStyle(
+              labelText: "Choose DOB", //label text of field
+              labelStyle: const TextStyle(
                 fontSize: 16.0,
                 color: Colors.grey,
               ),
-              focusedBorder: OutlineInputBorder(
+              focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Colors.black,
                 ),
@@ -166,7 +207,7 @@ class _PatientState extends State<Patient> {
                   Radius.circular(30.0),
                 ),
               ),
-              enabledBorder: OutlineInputBorder(
+              enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Colors.black,
                 ),
@@ -174,7 +215,7 @@ class _PatientState extends State<Patient> {
                   Radius.circular(30.0),
                 ),
               ),
-              border: OutlineInputBorder(
+              border: const OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Colors.black,
                 ),
@@ -183,27 +224,8 @@ class _PatientState extends State<Patient> {
                 ),
               ),
             ),
-            readOnly:
-                true, //set it true, so that user will not able to edit text
-            onTap: () async {
-              DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(
-                      2000), //DateTime.now() - not to allow to choose before today.
-                  lastDate: DateTime(2101));
-
-              if (pickedDate != null) {
-                String formattedDate =
-                    DateFormat('yyyy-MM-dd').format(pickedDate);
-                setState(() {
-                  dobController.text =
-                      formattedDate; //set output date to TextField value.
-                });
-              } else {
-                log("Date is not selected");
-              }
-            },
+            // readOnly:
+            //     true, //set it true, so that user will not able to edit text
           ),
           const SizedBox(
             height: 20,

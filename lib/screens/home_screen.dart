@@ -12,7 +12,7 @@ class LayoutRederer extends StatelessWidget {
         Expanded(
           child: child != null ? child! : const SizedBox(),
         ),
-        buildCard(),
+        // buildCard(),
       ],
     );
   }
