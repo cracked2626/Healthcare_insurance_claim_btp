@@ -152,6 +152,21 @@ class _SignUpState extends State<SignUp> {
                     Navigator.of(context).pushNamed(RoutesName.login);
                   },
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(
+                  ' or',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                buildElevatedButton(
+                  title: "Login",
+                  showLoader: showSpinner,
+                  onPressed: () async {
+                    if (!mounted) return;
+                    Navigator.of(context).pushNamed(RoutesName.login);
+                  },
+                ),
               ],
             ),
           ),

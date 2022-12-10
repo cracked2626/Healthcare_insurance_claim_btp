@@ -35,9 +35,7 @@ class _HospitalAdminState extends State<HospitalAdmin> {
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.25,
-                child: Flexible(
-                  child: buildAproveRecord(),
-                ),
+                child: buildAproveRecord(),
               ),
               const SizedBox(
                 width: 20,
