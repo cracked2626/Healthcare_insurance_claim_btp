@@ -9,7 +9,7 @@ class ContractsConnector {
   final String rpcUrl = "http://127.0.0.1:7545";
   final String wsUrl = "ws://127.0.0.1:7545";
   final String privateKey =
-      "9101369c4929962ab9b3d9af25151cbd35fa7450a1cd047842d07fe1002093a4";
+      "ef078faccd7931ea9f47721118e209422a03c0a169e8883826f8c68a8094db73";
 
   Web3Client? _client;
   bool isLoading = false;
@@ -39,7 +39,7 @@ class ContractsConnector {
     });
     await getAbi();
     await getDeployedContract();
-    await getCredentials();
+    getCredentials();
   }
 
   Future<void> getAbi() async {
@@ -52,18 +52,20 @@ class ContractsConnector {
         EthereumAddress.fromHex(abiJson["networks"]["5777"]["address"]);
   }
 
-  Future<void> getCredentials() async {
+  getCredentials() {
     _credentials = EthPrivateKey.fromHex(privateKey);
   }
 
   Future<void> getDeployedContract() async {
-    _contract = DeployedContract(
-        ContractAbi.fromJson(abiCode!, "HealthCare"), _contractAddress!);
+    final s = ContractAbi.fromJson(abiCode!, "HealthCare");
+    _contract = DeployedContract(s, _contractAddress!);
+    print(
+        "${_contract!.abi} ${_contract!.address} ${_contract!.functions} ${_contract!.toString()}");
     _newRecord = _contract!.function("newRecord");
     _signRecord = _contract!.function("signRecord");
 
-    _recordCreated = _contract!.event("RecordCreated");
-    _recordSigned = _contract!.event("RecordSigned");
+    _recordCreated = _contract!.event("recordCreated");
+    _recordSigned = _contract!.event("recordSigned");
   }
 
   signRecord(int recID) async {
@@ -102,6 +104,7 @@ class ContractsConnector {
                 ]),
             chainId: 5777)
         .then((value) {
+      print("new record added in contract ${value}");
       isLoading = false;
     });
   }
