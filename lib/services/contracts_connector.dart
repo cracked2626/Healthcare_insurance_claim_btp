@@ -6,16 +6,17 @@ import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 
 class ContractsConnector {
-  final String rpcUrl = "http://127.0.0.1:7545";
-  final String wsUrl = "ws://127.0.0.1:7545";
+  final String rpcUrl = "https://rpc.ankr.com/eth_goerli";
+  final String wsUrl = "ws://rpc.ankr.com/eth_goerli";
   final String privateKey =
-      "ef078faccd7931ea9f47721118e209422a03c0a169e8883826f8c68a8094db73";
+      "234eef1f8cad42fc8aa5db00d0be474ba7f652a8793451e30b0df3d3ceb703ef";
 
   Web3Client? _client;
   bool isLoading = false;
 
   String? abiCode;
   EthereumAddress? _contractAddress;
+  // String _contractAddress;
 
   Credentials? _credentials;
 
@@ -46,10 +47,12 @@ class ContractsConnector {
     String abiStringFile =
         await rootBundle.loadString("build/contracts/HealthCare.json");
     var abiJson = jsonDecode(abiStringFile);
+    print(abiStringFile);
+    print(abiJson);
     abiCode = jsonEncode(abiJson["abi"]);
 
     _contractAddress =
-        EthereumAddress.fromHex(abiJson["networks"]["5777"]["address"]);
+        EthereumAddress.fromHex("0x38c89bD5ab7c9Aad4b30624Dd13f51CDaBA97ED2");
   }
 
   getCredentials() {
@@ -80,7 +83,7 @@ class ContractsConnector {
                 BigInt.from(recID),
               ],
             ),
-            chainId: 5777)
+            chainId: 5)
         .then((value) {
       isLoading = false;
     });
@@ -102,7 +105,7 @@ class ContractsConnector {
                   hName,
                   BigInt.from(price)
                 ]),
-            chainId: 5777)
+            chainId: 5)
         .then((value) {
       print("new record added in contract ${value}");
       isLoading = false;

@@ -170,7 +170,7 @@ class _PatientState extends State<Patient> {
                             textButtonTheme: TextButtonThemeData(
                               style: TextButton.styleFrom(
                                 foregroundColor:
-                                    Colors.red, // button text color
+                                Colors.red, // button text color
                               ),
                             ),
                           ),
@@ -180,7 +180,7 @@ class _PatientState extends State<Patient> {
                   print("date picked $pickedDate");
                   if (pickedDate != null) {
                     String formattedDate =
-                        DateFormat('yyyy-MM-dd').format(pickedDate);
+                    DateFormat('yyyy-MM-dd').format(pickedDate);
                     setState(() {
                       print("here i am");
                       dobController.text =
