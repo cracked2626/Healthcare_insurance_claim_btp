@@ -136,8 +136,8 @@ class _SignUpState extends State<SignUp> {
                       showSnackBar(context, 'Please enter password');
                       return;
                     }
-                    final meta = context.read<MetamaskProvider>();
-                    meta.connect();
+                    // final meta = context.read<MetamaskProvider>();
+                    // meta.connect();
 
                     await FirebaseFirestore.instance.collection('users').add({
                       'name': nameController.text,

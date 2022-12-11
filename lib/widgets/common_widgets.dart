@@ -2,6 +2,8 @@
 import 'package:btp_project/providers/metaMask_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 ElevatedButton buildElevatedButton(
     {required String title,
@@ -49,30 +51,32 @@ Padding buildMetaMaskStatus(BuildContext context) {
         ),
       ),
       padding: const EdgeInsets.all(10.0),
-      child: Consumer<MetamaskProvider>(
-        builder: (context, meta, child) {
-          String text = '';
-          if (meta.isConnected && meta.isInOperatingChain) {
-            text = 'Metamask connected';
-          } else if (meta.isConnected && !meta.isInOperatingChain) {
-            text = 'Wrong operating chain';
-          } else if (meta.isEnabled) {
-            return const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Connect Metamask',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            );
-          } else {
-            text = 'Unsupported Browser For Metamask';
-          }
+      child: 
+      // Consumer<MetamaskProvider>(
+      //   builder: (context, meta, child) {
+      //     String text = '';
+      //     if (meta.isConnected && meta.isInOperatingChain) {
+      //       text = 'Metamask connected';
+      //     } else if (meta.isConnected && !meta.isInOperatingChain) {
+      //       text = 'Wrong operating chain';
+      //     } else if (meta.isEnabled) {
+      //       return const Padding(
+      //         padding: EdgeInsets.all(8.0),
+      //         child: Text(
+      //           'Connect Metamask',
+      //           style: TextStyle(
+      //             fontSize: 14.0,
+      //             color: Colors.white,
+      //             fontWeight: FontWeight.bold,
+      //           ),
+      //         ),
+      //       );
+      //     } else {
+      //       text = 'Unsupported Browser For Metamask';
+      //     }
 
-          return Padding(
+      //     return
+           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
@@ -80,9 +84,9 @@ Padding buildMetaMaskStatus(BuildContext context) {
                   'assets/images/metamask.png',
                   height: 60,
                 ),
-                Text(
-                  text,
-                  style: const TextStyle(
+               const Text(
+                  "hello world",
+                  style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -90,13 +94,8 @@ Padding buildMetaMaskStatus(BuildContext context) {
                 ),
               ],
             ),
-          );
-        },
-      ),
-      onPressed: () {
-        final meta = context.read<MetamaskProvider>();
-        meta.connect();
-      },
+          ),
+        onPressed: (){},
     ),
   );
 }
