@@ -43,11 +43,13 @@ class ContractsConnector {
   }
 
   Future<void> getAbi() async {
-    String abiStringFile = await rootBundle.loadString("build/contracts/HealthCare.json");
+    String abiStringFile =
+        await rootBundle.loadString("build/contracts/HealthCare.json");
     var abiJson = jsonDecode(abiStringFile);
     abiCode = jsonEncode(abiJson["abi"]);
 
-    _contractAddress = EthereumAddress.fromHex(abiJson["networks"]["5777"]["address"]);
+    _contractAddress =
+        EthereumAddress.fromHex(abiJson["networks"]["5777"]["address"]);
   }
 
   Future<void> getCredentials() async {
@@ -55,7 +57,8 @@ class ContractsConnector {
   }
 
   Future<void> getDeployedContract() async {
-    _contract = DeployedContract(ContractAbi.fromJson(abiCode!, "HealthCare"), _contractAddress!);
+    _contract = DeployedContract(
+        ContractAbi.fromJson(abiCode!, "HealthCare"), _contractAddress!);
     _newRecord = _contract!.function("newRecord");
     _signRecord = _contract!.function("signRecord");
 
@@ -63,23 +66,43 @@ class ContractsConnector {
     _recordSigned = _contract!.event("RecordSigned");
   }
 
-  signRecord() async {
+  signRecord(int recID) async {
     isLoading = true;
-   await _client!.sendTransaction(_credentials!, Transaction.callContract(
-      contract: _contract!,
-      function: _signRecord!,
-      parameters: [
-        BigInt.from(1),
-      ],
-    ), chainId: 5777).then((value) {
+    await _client!
+        .sendTransaction(
+            _credentials!,
+            Transaction.callContract(
+              contract: _contract!,
+              function: _signRecord!,
+              parameters: [
+                BigInt.from(recID),
+              ],
+            ),
+            chainId: 5777)
+        .then((value) {
       isLoading = false;
     });
   }
-   
-  // createNewRecord() async {
-  //   isLoading = true;
-  //   await _client!.sendTransaction(_credentials!, Transaction.callContract(contract: _contract!, function: _newRecord!, parameters: [
 
-  //   ]))
-  // } 
+  createNewRecord(
+      int id, String patientName, String date, String hName, int price) async {
+    isLoading = true;
+    await _client!
+        .sendTransaction(
+            _credentials!,
+            Transaction.callContract(
+                contract: _contract!,
+                function: _newRecord!,
+                parameters: [
+                  BigInt.from(id),
+                  patientName,
+                  date,
+                  hName,
+                  BigInt.from(price)
+                ]),
+            chainId: 5777)
+        .then((value) {
+      isLoading = false;
+    });
+  }
 }
