@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:btp_project/constants/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +91,8 @@ StreamBuilder<QuerySnapshot<Map<String, dynamic>>> buildStreamBuilder(
               // format date like 8 march 2021
               String signCount =
                   ds['signCount'] == null ? '0' : ds['signCount'].toString();
-
+              log('signCount $signCount');
+              log('isInsuranceAdmin $isInsuranceAdmin');
               return isInsuranceAdmin == true
                   ? signCount == '2'
                       ? Table(

@@ -70,21 +70,7 @@ class _LabAdminState extends State<LabAdmin> {
         const SizedBox(
           height: 50,
         ),
-        Table(
-          border: TableBorder.all(color: Colors.black),
-          children: [
-            TableRow(
-              children: [
-                buildText('Patient ID', isHeading: true),
-                buildText('Name', isHeading: true),
-                buildText('Date of claim', isHeading: true),
-                buildText('Hospital Name', isHeading: true),
-                buildText('Amount', isHeading: true),
-                buildText('Sign Count', isHeading: true),
-              ],
-            ),
-          ],
-        ),
+        buildPatientRecords(),
         buildStreamBuilder(),
       ],
     );
@@ -135,14 +121,14 @@ class _LabAdminState extends State<LabAdmin> {
               buildElevatedButton(
                 title: "Approve Insurance",
                 showLoader: showLoading,
-                onPressed: () async{
+                onPressed: () async {
                   setState(() {
-                    showLoading=true;
+                    showLoading = true;
                   });
                   await doEthConnectAndCreateContract();
                   await approveInsurance();
                   setState(() {
-                    showLoading=false;
+                    showLoading = false;
                   });
                 },
               ),

@@ -91,25 +91,32 @@ class _InsuranceAdminState extends State<InsuranceAdmin> {
         const SizedBox(
           height: 50,
         ),
-        Table(
-          border: TableBorder.all(
-            color: const Color(0xfff6bfe6),
-            width: 4.0,
+        Container(
+          color: const Color(0xfff5e1fa),
+          child: Column(
+            children: [
+              Table(
+                border: TableBorder.all(
+                  color: const Color(0xfff6bfe6),
+                  width: 4.0,
+                ),
+                children: [
+                  TableRow(
+                    children: [
+                      buildText('Patient ID', isHeading: true),
+                      buildText('Name', isHeading: true),
+                      buildText('Date of claim', isHeading: true),
+                      buildText('Hospital Name', isHeading: true),
+                      buildText('Amount', isHeading: true),
+                      buildText('Sign Count', isHeading: true),
+                    ],
+                  ),
+                ],
+              ),
+              buildStreamBuilder(isInsuranceAdmin: true),
+            ],
           ),
-          children: [
-            TableRow(
-              children: [
-                buildText('Patient ID', isHeading: true),
-                buildText('Name', isHeading: true),
-                buildText('Date of claim', isHeading: true),
-                buildText('Hospital Name', isHeading: true),
-                buildText('Amount', isHeading: true),
-                buildText('Sign Count', isHeading: true),
-              ],
-            ),
-          ],
         ),
-        buildStreamBuilder(isInsuranceAdmin: true),
       ],
     );
   }
