@@ -149,7 +149,7 @@ class _SignUpState extends State<SignUp> {
                       showSpinner = false;
                     });
                     if (!mounted) return;
-                    Navigator.of(context).pushNamed(RoutesName.login);
+                    // Navigator.of(context).pushNamed(RoutesName.login);
                   },
                 ),
                 const SizedBox(
@@ -161,10 +161,10 @@ class _SignUpState extends State<SignUp> {
                 ),
                 buildElevatedButton(
                   title: "Login",
-                  showLoader: showSpinner,
+                  // showLoader: showSpinner,
                   onPressed: () async {
                     if (!mounted) return;
-                    Navigator.of(context).pushNamed(RoutesName.login);
+                    // Navigator.of(context).pushNamed(RoutesName.login);
                   },
                 ),
               ],

@@ -2,7 +2,10 @@ import 'package:btp_project/services/contracts_connector.dart';
 import 'package:btp_project/widgets/common_widgets.dart';
 import 'package:btp_project/widgets/text_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:btp_project/screens/patient_records_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../constants/colors.dart';
+import '../generated/assets.dart';
 
 class InsuranceAdmin extends StatefulWidget {
   const InsuranceAdmin({Key? key}) : super(key: key);
@@ -33,26 +36,54 @@ class _InsuranceAdminState extends State<InsuranceAdmin> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Insurance Claims'),
-          actions: [
-            buildMetaMaskStatus(context),
-          ],
-        ),
         body: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          decoration: buildGradientDecoration(),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 100.0,
+            vertical: 2.0,
           ),
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
             children: [
+              buildTopAppBar(context, title: 'Approved Insurance Claims'),
               const SizedBox(
                 width: 20,
               ),
-              Flexible(
-                child: buildRecords(),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 200.0,
+                        ),
+                        const Text(
+                          "All Records are approved\nby Hospital & Lab",
+                          style: TextStyle(
+                            fontSize: 32.0,
+                            fontWeight: FontWeight.bold,
+                            color: darkPurpleTextColor,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 50.0),
+                          child: SvgPicture.asset(
+                            Assets.imagesUndrawDiaryRe4jpc,
+                            height: 300.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 100,
+                  ),
+                  Flexible(
+                    child: buildRecords(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -64,18 +95,25 @@ class _InsuranceAdminState extends State<InsuranceAdmin> {
   Column buildRecords() {
     return Column(
       children: [
+        const SizedBox(
+          height: 50.0,
+        ),
         const Text(
           'Approved Records',
           style: TextStyle(
             fontSize: 32.0,
             fontWeight: FontWeight.bold,
+            color: darkPurpleTextColor,
           ),
         ),
         const SizedBox(
           height: 50,
         ),
         Table(
-          border: TableBorder.all(color: Colors.black),
+          border: TableBorder.all(
+            color: const Color(0xfff6bfe6),
+            width: 4.0,
+          ),
           children: [
             TableRow(
               children: [
@@ -89,7 +127,7 @@ class _InsuranceAdminState extends State<InsuranceAdmin> {
             ),
           ],
         ),
-        buildStreamBuilder(),
+        buildStreamBuilder(isInsuranceAdmin: true),
       ],
     );
   }

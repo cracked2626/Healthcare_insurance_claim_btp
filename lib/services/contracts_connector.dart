@@ -76,12 +76,13 @@ class ContractsConnector {
         .sendTransaction(
             _credentials!,
             Transaction.callContract(
-              contract: _contract!,
-              function: _signRecord!,
-              parameters: [
-                BigInt.from(recID),
-              ],
-            ),
+                contract: _contract!,
+                function: _signRecord!,
+                parameters: [
+                  BigInt.from(recID),
+                ],
+                gasPrice: EtherAmount.fromUnitAndValue(
+                    EtherUnit.gwei, BigInt.from(1000))),
             chainId: 5)
         .then((value) {
       print("contract signed ${value}");
@@ -106,7 +107,7 @@ class ContractsConnector {
                   BigInt.from(price)
                 ],
                 gasPrice: EtherAmount.fromUnitAndValue(
-                    EtherUnit.gwei, BigInt.from(1))),
+                    EtherUnit.gwei, BigInt.from(1000))),
             chainId: 5)
         .then((value) {
       print("new record added in contract ${value}");

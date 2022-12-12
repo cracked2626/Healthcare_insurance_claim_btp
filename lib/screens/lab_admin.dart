@@ -1,9 +1,15 @@
-import 'package:btp_project/screens/patient_records_screen.dart';
+import 'dart:developer';
+
 import 'package:btp_project/services/contracts_connector.dart';
+import 'package:btp_project/services/payment_initator.dart';
 import 'package:btp_project/widgets/common_widgets.dart';
 import 'package:btp_project/widgets/text_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../constants/colors.dart';
+import '../generated/assets.dart';
 
 class LabAdmin extends StatefulWidget {
   const LabAdmin({Key? key}) : super(key: key);
@@ -19,30 +25,33 @@ class _LabAdminState extends State<LabAdmin> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Lab Admin'),
-          actions: [
-            buildMetaMaskStatus(context),
-          ],
-        ),
         body: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          decoration: buildGradientDecoration(),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 100.0,
+            vertical: 2.0,
           ),
-          padding: const EdgeInsets.all(24),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: ListView(
             children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.25,
-                child: buildAproveRecord(),
-              ),
+              buildTopAppBar(context, title: 'Approve Patient Insurance'),
               const SizedBox(
-                width: 20,
+                height: 50.0,
               ),
-              Flexible(
-                child: buildRecords(),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    child: buildAproveRecord(),
+                  ),
+                  const SizedBox(
+                    width: 200,
+                  ),
+                  Flexible(
+                    child: buildRecords(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -88,28 +97,67 @@ class _LabAdminState extends State<LabAdmin> {
     return Column(
       children: [
         const Text(
-          'Approve Medical Record',
+          "Approve Patient's Insurance Claim",
           style: TextStyle(
             fontSize: 32.0,
             fontWeight: FontWeight.bold,
+            color: darkPurpleTextColor,
+          ),
+        ),
+        const SizedBox(
+          height: 20.0,
+        ),
+        const Text(
+          'Just fill in the patient ID and click approve. Patient id can be found in the patient record section.',
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.w500,
+            color: darkPurpleTextColor,
           ),
         ),
         const SizedBox(
           height: 50,
         ),
-        buildTextField(
-          controller: idController,
-          hint: 'Patient ID',
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        buildElevatedButton(
-          title: "Approve Insurance",
-          showLoader: showLoading,
-          onPressed: () async {
-            await approveInsurance();
-          },
+        Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(32.0),
+            ),
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              buildTextField(
+                controller: idController,
+                hint: 'Patient ID',
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              buildElevatedButton(
+                title: "Approve Insurance",
+                showLoader: showLoading,
+                onPressed: () async {
+                  setState(() {
+                    showLoading = true;
+                  });
+                  await doEthConnectAndCreateContract();
+                  await approveInsurance();
+                  setState(() {
+                    showLoading = false;
+                  });
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: SvgPicture.asset(
+                  Assets.imagesUndrawCertificationReIfll,
+                  height: 300.0,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -121,10 +169,14 @@ class _LabAdminState extends State<LabAdmin> {
       showSnackBar(context, "Please enter patient ID");
       return;
     }
-    final contractsConnector = ContractsConnector();
-    final initContract = await contractsConnector.init();
-    final res = await contractsConnector
-        .signRecord(int.parse(idController.text.trim()));
+    try {
+      final contractsConnector = ContractsConnector();
+      final initContract = await contractsConnector.init();
+      final res = await contractsConnector
+          .signRecord(int.parse(idController.text.trim()));
+    } catch (e) {
+      log("Error", error: e);
+    }
     setState(() {
       showLoading = true;
     });
@@ -134,13 +186,14 @@ class _LabAdminState extends State<LabAdmin> {
         .get();
 
     if (documentSnapshot.exists) {
+      print(documentSnapshot['isApprovedByLab']);
       if (documentSnapshot['isApprovedByLab'] == true) {
         // show snackbar
         if (!mounted) return;
         showSnackBar(context, 'Insurance Claim is already Approved');
       } else {
         // show snackbar
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('InsuranceClaims')
             .doc(idController.text.trim())
             .update({

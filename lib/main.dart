@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         builder: (context, child) => LayoutRederer(child: child),
         onGenerateRoute: RouteGenerator.generateRoute,
-        initialRoute: RoutesName.login,
+        initialRoute: RoutesName.landingPage,
       ),
     );
   }
