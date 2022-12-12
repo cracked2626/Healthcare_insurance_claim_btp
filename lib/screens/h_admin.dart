@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../constants/colors.dart';
 import '../generated/assets.dart';
+import '../services/payment_initator.dart';
 
 class HospitalAdmin extends StatefulWidget {
   const HospitalAdmin({Key? key}) : super(key: key);
@@ -131,8 +132,15 @@ class _HospitalAdminState extends State<HospitalAdmin> {
               buildElevatedButton(
                 title: "Approve Insurance",
                 showLoader: showLoading,
-                onPressed: () {
-                  approveInsurance();
+                onPressed: () async{
+                  setState(() {
+                    showLoading=true;
+                  });
+                  await doEthConnectAndCreateContract();
+                  await approveInsurance();
+                  setState(() {
+                    showLoading=false;
+                  });
                 },
               ),
               Padding(
@@ -169,7 +177,7 @@ class _HospitalAdminState extends State<HospitalAdmin> {
         showSnackBar(context, 'Insurance is already Approved');
       } else {
         // show snackbar
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('InsuranceClaims')
             .doc(idController.text.trim())
             .update({

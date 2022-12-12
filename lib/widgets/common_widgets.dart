@@ -116,9 +116,9 @@ Padding buildMetaMaskStatus(BuildContext context) {
           );
         },
       ),
-      onPressed: () {
+      onPressed: () async{
         final meta = context.read<MetamaskProvider>();
-        meta.connect();
+       await meta.connect();
       },
     ),
   );

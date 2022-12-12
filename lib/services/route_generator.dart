@@ -25,8 +25,6 @@ class RouteGenerator {
       case RoutesName.insuranceAdmin:
         return GeneratePageRoute(
             page: const InsuranceAdmin(), routeName: settings.name);
-      case RoutesName.login:
-        return GeneratePageRoute(page: const Login(), routeName: settings.name);
       case RoutesName.landingPage:
         return GeneratePageRoute(
           page: const LandingPage(),
@@ -34,7 +32,9 @@ class RouteGenerator {
         );
       default:
         return GeneratePageRoute(
-            page: const SignUp(), routeName: settings.name);
+          page: const LandingPage(),
+          routeName: settings.name,
+        );
     }
   }
 }

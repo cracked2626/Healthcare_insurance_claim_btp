@@ -1,3 +1,4 @@
+import 'package:btp_project/services/payment_initator.dart';
 import 'package:btp_project/widgets/common_widgets.dart';
 import 'package:btp_project/widgets/text_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -134,8 +135,15 @@ class _LabAdminState extends State<LabAdmin> {
               buildElevatedButton(
                 title: "Approve Insurance",
                 showLoader: showLoading,
-                onPressed: () {
-                  approveInsurance();
+                onPressed: () async{
+                  setState(() {
+                    showLoading=true;
+                  });
+                  await doEthConnectAndCreateContract();
+                  await approveInsurance();
+                  setState(() {
+                    showLoading=false;
+                  });
                 },
               ),
               Padding(
@@ -167,13 +175,14 @@ class _LabAdminState extends State<LabAdmin> {
         .get();
 
     if (documentSnapshot.exists) {
+      print(documentSnapshot['isApprovedByLab']);
       if (documentSnapshot['isApprovedByLab'] == true) {
         // show snackbar
         if (!mounted) return;
         showSnackBar(context, 'Insurance Claim is already Approved');
       } else {
         // show snackbar
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('InsuranceClaims')
             .doc(idController.text.trim())
             .update({

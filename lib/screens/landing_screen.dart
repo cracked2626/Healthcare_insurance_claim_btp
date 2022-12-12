@@ -26,7 +26,8 @@ class _LandingPageState extends State<LandingPage> {
   TextEditingController rePasswordController = TextEditingController();
   TextEditingController metamaskAccountController = TextEditingController();
   TextEditingController entityController = TextEditingController();
-  bool showSpinner = false;
+  bool showSpinnerForSignUp = false;
+  bool showSpinnerForLogIn = false;
   List<String> items = [
     "Entity Type",
     "Patient",
@@ -131,7 +132,7 @@ class _LandingPageState extends State<LandingPage> {
         ),
         buildElevatedButton(
           title: "Login",
-          showLoader: showSpinner,
+          showLoader: showSpinnerForLogIn,
           onPressed: () {
             // sendToScreen(
             //   context,
@@ -152,7 +153,7 @@ class _LandingPageState extends State<LandingPage> {
         ),
         buildElevatedButton(
           title: "Sign Up",
-          showLoader: showSpinner,
+          showLoader: showSpinnerForSignUp,
           onPressed: () async {
             setState(() {
               isLogin = false;
@@ -193,10 +194,10 @@ class _LandingPageState extends State<LandingPage> {
       return;
     }
     setState(() {
-      showSpinner = true;
+      showSpinnerForLogIn = true;
     });
     final meta = context.read<MetamaskProvider>();
-    meta.connect();
+    await meta.connect();
 
     await FirebaseFirestore.instance.collection('users').add({
       'name': entityController.text,
@@ -204,20 +205,23 @@ class _LandingPageState extends State<LandingPage> {
       'entity': initalValue,
     });
     setState(() {
-      showSpinner = false;
+      showSpinnerForLogIn = false;
     });
     if (!mounted) return;
     if (initalValue == "Patient" && passwordController.text == "patient") {
       sendToScreen(context, RoutesName.patient);
     } else if (initalValue == "Hospital admin" &&
         passwordController.text == "hadmin") {
-      sendToScreen(context, RoutesName.labAdmin);
+      sendToScreen(context, RoutesName.hAdmin);
     } else if (initalValue == "Lab admin" &&
         passwordController.text == "labadmin") {
       sendToScreen(context, RoutesName.labAdmin);
     } else if (initalValue == "Insurance company" &&
         passwordController.text == "insurance") {
       sendToScreen(context, RoutesName.insuranceAdmin);
+    }
+    else{
+      showSnackBar(context, "Wrong Details Entered");
     }
   }
 
@@ -248,7 +252,7 @@ class _LandingPageState extends State<LandingPage> {
         ),
         buildElevatedButton(
           title: "Sign Up",
-          showLoader: showSpinner,
+          showLoader: showSpinnerForSignUp,
           onPressed: () async {
             try {
               if (initalValue == "Entity Type") {
@@ -259,11 +263,11 @@ class _LandingPageState extends State<LandingPage> {
                 return;
               }
               setState(() {
-                showSpinner = true;
+                showSpinnerForSignUp = true;
               });
               final meta =
                   Provider.of<MetamaskProvider>(context, listen: false);
-              meta.connect();
+             await meta.connect();
 
               await FirebaseFirestore.instance.collection('users').add({
                 'name': nameController.text,
@@ -272,7 +276,7 @@ class _LandingPageState extends State<LandingPage> {
                 'walletAccount': metamaskAccountController.text,
               });
               setState(() {
-                showSpinner = false;
+                showSpinnerForSignUp = false;
                 isLogin = true;
               });
 
@@ -284,7 +288,7 @@ class _LandingPageState extends State<LandingPage> {
               // Navigator.of(context).pushNamed(RoutesName.login);
             } catch (e) {
               setState(() {
-                showSpinner = false;
+                showSpinnerForSignUp = false;
               });
               showSnackBar(context, e.toString());
             }
@@ -302,7 +306,7 @@ class _LandingPageState extends State<LandingPage> {
         ),
         buildElevatedButton(
           title: "Login",
-          showLoader: showSpinner,
+          showLoader: showSpinnerForLogIn,
           onPressed: () async {
             setState(() {
               isLogin = true;
