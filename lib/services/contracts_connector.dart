@@ -84,7 +84,7 @@ class ContractsConnector {
             ),
             chainId: 5)
         .then((value) {
-      print("new record added in contract ${value}");
+      print("contract signed ${value}");
       isLoading = false;
     });
   }
@@ -104,7 +104,9 @@ class ContractsConnector {
                   date,
                   hName,
                   BigInt.from(price)
-                ]),
+                ],
+                gasPrice: EtherAmount.fromUnitAndValue(
+                    EtherUnit.gwei, BigInt.from(1))),
             chainId: 5)
         .then((value) {
       print("new record added in contract ${value}");
