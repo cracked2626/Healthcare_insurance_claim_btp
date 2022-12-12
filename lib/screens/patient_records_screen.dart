@@ -256,7 +256,7 @@ class _PatientState extends State<Patient> {
 
   doEthConnectAndCreateContract() async {
     final contractsConnector = ContractsConnector();
-    final initContract = await ContractsConnector().init();
+    final initContract = await contractsConnector.init();
     final res = await contractsConnector.createNewRecord(
         int.parse(idController.text),
         nameController.text,
@@ -345,7 +345,7 @@ class _PatientState extends State<Patient> {
   claimInsurance() async {
     //  save user data to firebase
     print('claimInsurance called');
-    await Future.delayed(const Duration(seconds: 30));
+    await Future.delayed(const Duration(seconds: 5));
     await FirebaseFirestore.instance
         .collection('InsuranceClaims')
         .doc(idController.text.trim())

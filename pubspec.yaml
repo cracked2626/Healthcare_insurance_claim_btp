@@ -72,6 +72,7 @@ flutter:
   assets:
     - assets/images/
     - build/contracts/
+    - abis/
   fonts:
     - family: Satoshi
       fonts:

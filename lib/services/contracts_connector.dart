@@ -6,16 +6,17 @@ import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 
 class ContractsConnector {
-  final String rpcUrl = "http://127.0.0.1:7545";
-  final String wsUrl = "ws://127.0.0.1:7545";
+  final String rpcUrl = "https://rpc.ankr.com/eth_goerli";
+  final String wsUrl = "ws://rpc.ankr.com/eth_goerli";
   final String privateKey =
-      "ef078faccd7931ea9f47721118e209422a03c0a169e8883826f8c68a8094db73";
+      "ea35874cfc167c65eff768dd8a4146e03b009aa5dfb65acfefda8b0c51258b35";
 
   Web3Client? _client;
   bool isLoading = false;
 
   String? abiCode;
   EthereumAddress? _contractAddress;
+  // String _contractAddress;
 
   Credentials? _credentials;
 
@@ -23,6 +24,8 @@ class ContractsConnector {
 
   ContractFunction? _newRecord;
   ContractFunction? _signRecord;
+  ContractFunction? _allRecords;
+  ContractFunction? _getRecordLength;
 
   ContractEvent? _recordCreated;
   ContractEvent? _recordSigned;
@@ -43,13 +46,12 @@ class ContractsConnector {
   }
 
   Future<void> getAbi() async {
-    String abiStringFile =
-        await rootBundle.loadString("build/contracts/HealthCare.json");
+    String abiStringFile = await rootBundle.loadString("abis/HealthCare.json");
     var abiJson = jsonDecode(abiStringFile);
     abiCode = jsonEncode(abiJson["abi"]);
 
     _contractAddress =
-        EthereumAddress.fromHex(abiJson["networks"]["5777"]["address"]);
+        EthereumAddress.fromHex("0x60DAaa0A59914C0e7E38e8848bf72df337f97ab0");
   }
 
   getCredentials() {
@@ -59,10 +61,10 @@ class ContractsConnector {
   Future<void> getDeployedContract() async {
     final s = ContractAbi.fromJson(abiCode!, "HealthCare");
     _contract = DeployedContract(s, _contractAddress!);
-    print(
-        "${_contract!.abi} ${_contract!.address} ${_contract!.functions} ${_contract!.toString()}");
     _newRecord = _contract!.function("newRecord");
     _signRecord = _contract!.function("signRecord");
+    _allRecords = _contract!.function("getAllRecords");
+    _getRecordLength = _contract!.function("getAllRecordsLength");
 
     _recordCreated = _contract!.event("recordCreated");
     _recordSigned = _contract!.event("recordSigned");
@@ -80,8 +82,9 @@ class ContractsConnector {
                 BigInt.from(recID),
               ],
             ),
-            chainId: 5777)
+            chainId: 5)
         .then((value) {
+      print("contract signed ${value}");
       isLoading = false;
     });
   }
@@ -101,10 +104,35 @@ class ContractsConnector {
                   date,
                   hName,
                   BigInt.from(price)
-                ]),
-            chainId: 5777)
+                ],
+                gasPrice: EtherAmount.fromUnitAndValue(
+                    EtherUnit.gwei, BigInt.from(1))),
+            chainId: 5)
         .then((value) {
       print("new record added in contract ${value}");
+      isLoading = false;
+    });
+  }
+
+  Future<List<dynamic>> getAllRecords() async {
+    isLoading = true;
+    List<dynamic> records = [];
+    await _client!.call(
+        contract: _contract!, function: _allRecords!, params: []).then((value) {
+      print("all records ${value}");
+      records = value;
+      isLoading = false;
+    });
+    return records;
+  }
+
+  getAllRecordsLength() async {
+    isLoading = true;
+    await _client!.call(
+        contract: _contract!,
+        function: _getRecordLength!,
+        params: []).then((value) {
+      print("all records length ${value}");
       isLoading = false;
     });
   }

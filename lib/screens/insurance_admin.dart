@@ -1,8 +1,8 @@
+import 'package:btp_project/services/contracts_connector.dart';
 import 'package:btp_project/widgets/common_widgets.dart';
 import 'package:btp_project/widgets/text_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:btp_project/screens/patient_records_screen.dart';
-
 
 class InsuranceAdmin extends StatefulWidget {
   const InsuranceAdmin({Key? key}) : super(key: key);
@@ -12,6 +12,23 @@ class InsuranceAdmin extends StatefulWidget {
 }
 
 class _InsuranceAdminState extends State<InsuranceAdmin> {
+  List<dynamic> records = [];
+  @override
+  void initState() {
+    super.initState();
+    getAllRecordsFromSmartContract();
+  }
+
+  getAllRecordsFromSmartContract() async {
+    final ContractsConnector _connector = ContractsConnector();
+    await _connector.init();
+    final allRecords = await _connector.getAllRecords();
+    print(allRecords);
+    setState(() {
+      records = allRecords;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
