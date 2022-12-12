@@ -1,4 +1,5 @@
 import 'package:btp_project/screens/patient_records_screen.dart';
+import 'package:btp_project/services/contracts_connector.dart';
 import 'package:btp_project/widgets/common_widgets.dart';
 import 'package:btp_project/widgets/text_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -120,6 +121,10 @@ class _HospitalAdminState extends State<HospitalAdmin> {
       showSnackBar(context, "Please enter patient ID");
       return;
     }
+    final contractsConnector = ContractsConnector();
+    final initContract = await contractsConnector.init();
+    final res = await contractsConnector
+        .signRecord(int.parse(idController.text.trim()));
     setState(() {
       showLoading = true;
     });

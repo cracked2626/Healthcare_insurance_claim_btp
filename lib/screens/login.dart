@@ -195,7 +195,7 @@ class _LoginState extends State<Login> {
       sendToScreen(context, RoutesName.patient);
     } else if (initalValue == "Hospital admin" &&
         passwordController.text == "hadmin") {
-      sendToScreen(context, RoutesName.labAdmin);
+      sendToScreen(context, RoutesName.hAdmin);
     } else if (initalValue == "Lab admin" &&
         passwordController.text == "labadmin") {
       sendToScreen(context, RoutesName.labAdmin);
