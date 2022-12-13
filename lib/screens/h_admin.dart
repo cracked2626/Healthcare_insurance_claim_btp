@@ -121,10 +121,21 @@ class _HospitalAdminState extends State<HospitalAdmin> {
       showSnackBar(context, "Please enter patient ID");
       return;
     }
+<<<<<<< Updated upstream
     final contractsConnector = ContractsConnector();
     final initContract = await contractsConnector.init();
     final res = await contractsConnector
         .signRecord(int.parse(idController.text.trim()));
+=======
+    try {
+      final contractsConnector = ContractsConnector();
+      final initContract = await contractsConnector.init();
+      final res = await contractsConnector
+          .signRecord(int.parse(idController.text.trim()));
+    } catch (e) {
+      log("error $e");
+    }
+>>>>>>> Stashed changes
     setState(() {
       showLoading = true;
     });

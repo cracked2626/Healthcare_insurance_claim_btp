@@ -111,7 +111,7 @@ contract HealthCare {
 
         for (uint256 i = 0; i < recordsArr.length; i++) {
             Record storage record = _records[recordsArr[i]];
-            allUserRecords[i] = string(abi.encodePacked(uint2str(record.ID),"|",record.testName,"|", record.date,"|", record.hospitalName,"|",uint2str(record.price), "|", uint2str(record.signatureCount)));
+            allUserRecords[i] = string(abi.encodePacked(uint2str(record.ID),",",record.testName,",", record.date,",", record.hospitalName,",",uint2str(record.price), ",", uint2str(record.signatureCount)));
         }
 
         return allUserRecords;

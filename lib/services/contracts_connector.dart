@@ -51,7 +51,7 @@ class ContractsConnector {
     abiCode = jsonEncode(abiJson["abi"]);
 
     _contractAddress =
-        EthereumAddress.fromHex("0x60DAaa0A59914C0e7E38e8848bf72df337f97ab0");
+        EthereumAddress.fromHex("0x1400bB610442208D1f1022eD979f602A18b82EEE");
   }
 
   getCredentials() {
@@ -76,12 +76,22 @@ class ContractsConnector {
         .sendTransaction(
             _credentials!,
             Transaction.callContract(
+<<<<<<< Updated upstream
               contract: _contract!,
               function: _signRecord!,
               parameters: [
                 BigInt.from(recID),
               ],
             ),
+=======
+                contract: _contract!,
+                function: _signRecord!,
+                parameters: [
+                  BigInt.from(recID),
+                ],
+                gasPrice: EtherAmount.fromUnitAndValue(
+                    EtherUnit.gwei, BigInt.from(25))),
+>>>>>>> Stashed changes
             chainId: 5)
         .then((value) {
       print("contract signed ${value}");
@@ -106,7 +116,11 @@ class ContractsConnector {
                   BigInt.from(price)
                 ],
                 gasPrice: EtherAmount.fromUnitAndValue(
+<<<<<<< Updated upstream
                     EtherUnit.gwei, BigInt.from(1))),
+=======
+                    EtherUnit.gwei, BigInt.from(10))),
+>>>>>>> Stashed changes
             chainId: 5)
         .then((value) {
       print("new record added in contract ${value}");
