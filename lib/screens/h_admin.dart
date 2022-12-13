@@ -1,4 +1,5 @@
-import 'package:btp_project/screens/patient_records_screen.dart';
+import 'dart:developer';
+
 import 'package:btp_project/services/contracts_connector.dart';
 import 'package:btp_project/widgets/common_widgets.dart';
 import 'package:btp_project/widgets/text_fields.dart';
@@ -121,12 +122,6 @@ class _HospitalAdminState extends State<HospitalAdmin> {
       showSnackBar(context, "Please enter patient ID");
       return;
     }
-<<<<<<< Updated upstream
-    final contractsConnector = ContractsConnector();
-    final initContract = await contractsConnector.init();
-    final res = await contractsConnector
-        .signRecord(int.parse(idController.text.trim()));
-=======
     try {
       final contractsConnector = ContractsConnector();
       final initContract = await contractsConnector.init();
@@ -135,7 +130,6 @@ class _HospitalAdminState extends State<HospitalAdmin> {
     } catch (e) {
       log("error $e");
     }
->>>>>>> Stashed changes
     setState(() {
       showLoading = true;
     });

@@ -246,8 +246,6 @@ class _PatientState extends State<Patient> {
             showLoader: showLoading,
             onPressed: () async {
               await doEthConnectAndCreateContract();
-<<<<<<< Updated upstream
-=======
               try {
                 final contractsConnector = ContractsConnector();
                 final initContract = await contractsConnector.init();
@@ -260,7 +258,6 @@ class _PatientState extends State<Patient> {
               } catch (e) {
                 log("error $e");
               }
->>>>>>> Stashed changes
               await claimInsurance();
             },
           ),
